@@ -14,3 +14,5 @@ bcrypt==3.2.2
 razorpay
 python-dotenv
 python-jose
+passlib[bcrypt]
+pymongo
