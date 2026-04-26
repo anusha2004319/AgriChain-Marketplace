@@ -1,15 +1,14 @@
-from pymongo import MongoClient
 import os
+from pymongo import MongoClient
 
 MONGO_URL = os.getenv("MONGO_URL")
 
-client = MongoClient(MONGO_URL)
-db = client["agriChainDB"]
+print("DEBUG MONGO_URL:", MONGO_URL)  # 👈 ADD THIS
 
-users_collection = db["users"]
-listings_collection = db["market_listings"] 
-orders_collection = db["orders"]
-notifications_collection = db["notifications"]
-bank_accounts_collection = db["bank_accounts"]
+client = MongoClient(MONGO_URL, serverSelectionTimeoutMS=5000)
 
-print("MongoDB Connected Successfully!")
+try:
+    client.server_info()
+    print("✅ MongoDB Connected Successfully!")
+except Exception as e:
+    print("❌ MongoDB ERROR:", e)
