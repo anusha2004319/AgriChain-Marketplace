@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException, status
-from database import users_collection
-from security import verify_password, get_password_hash, create_access_token
+from backend.database import users_collection
+from backend.security import verify_password, get_password_hash, create_access_token
 
 # Import your exact schemas here!
-from schemas import UserAuth, UserLogin 
+from backend.schemas import UserAuth, UserLogin 
 
 router = APIRouter()
 
