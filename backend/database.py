@@ -1,14 +1,15 @@
-import os
 from pymongo import MongoClient
+import os
 
 MONGO_URL = os.getenv("MONGO_URL")
 
-print("DEBUG MONGO_URL:", MONGO_URL)  
+client = MongoClient(MONGO_URL)
 
-client = MongoClient(MONGO_URL, serverSelectionTimeoutMS=5000)
+db = client["agriChainDB"]
 
-try:
-    client.server_info()
-    print("✅ MongoDB Connected Successfully!")
-except Exception as e:
-    print("❌ MongoDB ERROR:", e)
+users_collection = db["users"]
+listings_collection = db["market_listings"]
+orders_collection = db["orders"]
+notifications_collection = db["notifications"]
+bank_accounts_collection = db["bank_accounts"]
+print("Mongo URL exists:", MONGO_URL is not None)
