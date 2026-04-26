@@ -61,27 +61,38 @@ def load_ml_models():
             print("⚠️ AWS keys missing — skipping model download")
             return
 
-        s3 = boto3.client(
-            's3',
-            aws_access_key_id=aws_key,
-            aws_secret_access_key=aws_secret
-        )
+        import threading
 
-        models = ['cb_price.cbm', 'cb_volume.cbm', 'prophet_model.pkl']
-        os.makedirs("models", exist_ok=True)
+        def download():
+            s3 = boto3.client(
+                's3',
+                aws_access_key_id=aws_key,
+                aws_secret_access_key=aws_secret
+            )
 
-        for model in models:
-            local_path = f"models/{model}"
-            if not os.path.exists(local_path):
-                print(f"Downloading {model}...")
-                s3.download_file('agrichain-ml-models', model, local_path)
+            models = ['cb_price.cbm', 'cb_volume.cbm', 'prophet_model.pkl']
+            os.makedirs("models", exist_ok=True)
+
+            for model in models:
+                local_path = f"models/{model}"
+                if not os.path.exists(local_path):
+                    print(f"Downloading {model}...")
+                    s3.download_file('agrichain-ml-models', model, local_path)
+
+       
+        threading.Thread(target=download).start()
 
     except Exception as e:
         print("❌ S3 error:", e)
 @app.on_event("startup")
 async def startup_event():
     print("🚀 App starting...")
-    load_ml_models()
+
+    try:
+        load_ml_models()
+        print("✅ Models loaded")
+    except Exception as e:
+        print("❌ Model loading failed:", e)
 @app.get("/")
 def read_root():
     return {"status": "online", "message": "AgriChain Backend is running securely!"}
