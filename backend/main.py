@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
-from database import db
+from backend.database import db
 # Import our new, hyper-modular routers!
-from routes.auth import router as auth_router
-from routes.market import router as market_router
-from routes.predictions import router as predictions_router
-from schemas import BankAccountInfo
-from database import users_collection, listings_collection, orders_collection, bank_accounts_collection
+from backend.routes.auth import router as auth_router
+from backend.routes.market import router as market_router
+from backend.routes.predictions import router as predictions_router
+from backend.schemas import BankAccountInfo
+from backend.database import users_collection, listings_collection, orders_collection, bank_accounts_collection
 # 1. Load the secret vault
 load_dotenv()
 logging.basicConfig(
