@@ -75,9 +75,15 @@ def load_ml_models():
 
             for model in models:
                 local_path = f"models/{model}"
-                if not os.path.exists(local_path):
-                    print(f"Downloading {model}...")
-                    s3.download_file('agrichain-ml-models', model, local_path)
+                try:
+                   if not os.path.exists(local_path):
+                       print(f"Downloading {model}...")
+                       s3.download_file('agrichain-ml-models', model, local_path)
+                       print(f"✅ Downloaded {model}")
+                   else:
+                       print(f"⚡ Already exists: {model}")
+                except Exception as e:
+                    print(f"❌ Failed to download {model}: {e}")
 
        
         threading.Thread(target=download).start()
