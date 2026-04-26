@@ -5,7 +5,7 @@ import pandas as pd
 def get_marketplace_items():
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
-        response = requests.get("http://127.0.0.1:8000/api/market_listings", headers=headers)
+        response = requests.get(f"{API_URL}/market_listings", headers=headers)
         if response.status_code == 200:
             return response.json().get("listings", [])
         return []
@@ -16,7 +16,7 @@ def fetch_admin_data(endpoint, default_return):
     token = st.session_state.get("token", "")
     headers = {"Authorization": f"Bearer {token}"}
     try:
-        response = requests.get(f"http://127.0.0.1:8000/api/admin/{endpoint}", headers=headers)
+        response = requests.get(f"{API_URL}/admin/{endpoint}", headers=headers)
         if response.status_code == 200:
             return response.json()
         elif response.status_code == 401:
@@ -30,7 +30,7 @@ def fetch_admin_data(endpoint, default_return):
         return default_return
 def fetch_notifications(role, username):
     # Fixed URL structure to match FastAPI: /api/notifications/{username}?role={role}
-    endpoint = f"http://127.0.0.1:8000/api/notifications/{username}?role={role}"  
+    endpoint = f"{API_URL}/notifications/{username}?role={role}"  
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
         response = requests.get(endpoint, headers=headers)

@@ -9,7 +9,7 @@ import plotly.express as px
 
 def fetch_bank_details(username):
     try:
-        response = requests.get(f"http://127.0.0.1:8000/api/seller/bank/{username}")
+        response = requests.get(f"{API_URL}/seller/bank/{username}")
         if response.status_code == 200 and response.json().get("status") == "success":
             return response.json().get("data")
         return None
@@ -19,7 +19,7 @@ def fetch_bank_details(username):
 def get_marketplace_items():
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
-        response = requests.get("http://127.0.0.1:8000/api/market_listings", headers=headers)
+        response = requests.get(f"{API_URL}/market_listings", headers=headers)
         if response.status_code == 200:
             return response.json().get("listings", [])
         return []
@@ -29,7 +29,7 @@ def get_marketplace_items():
 def fetch_seller_orders(username):
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
-        response = requests.get(f"http://127.0.0.1:8000/api/seller_orders/{username}", headers=headers)
+        response = requests.get(f"{API_URL}/seller_orders/{username}", headers=headers)
         if response.status_code == 200:
             return response.json().get("orders", []) 
         return []
@@ -39,7 +39,7 @@ def fetch_seller_orders(username):
 def get_analytics_data(username):
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
-        response = requests.get(f"http://127.0.0.1:8000/api/seller_orders/{username}", headers=headers)
+        response = requests.get(f"{API_URL}/seller_orders/{username}", headers=headers)
         if response.status_code == 200:
             orders = response.json().get("orders", [])
             all_items = []
@@ -57,7 +57,7 @@ def get_analytics_data(username):
         return pd.DataFrame()            
 
 def fetch_notifications(role, username):
-    endpoint = f"http://127.0.0.1:8000/api/notifications/{username}?role={role}"
+    endpoint = f"{API_URL}/notifications/{username}?role={role}"
         
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
@@ -197,7 +197,7 @@ def seller_dashboard():
             try:
                 with st.spinner(f"AI is pricing your {final_crop_name} and listing it..."):
                     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
-                    response = requests.post("http://127.0.0.1:8000/api/predict_demand", json=payload, headers=headers)
+                    response = requests.post(f"{API_URL}/predict_demand", json=payload, headers=headers)
                 
                 if response.status_code == 200:
                     data = response.json()["predictions"]
@@ -274,7 +274,7 @@ def seller_dashboard():
                         if status != "Shipped" and order_id != 'Unknown':
                             if st.button("Mark as Shipped", key=f"ship_{order_id}"):
                                 headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
-                                response = requests.put(f"http://127.0.0.1:8000/api/orders/{order_id}/status", json={"status": "Shipped"}, headers=headers)
+                                response = requests.put(f"{API_URL}/orders/{order_id}/status", json={"status": "Shipped"}, headers=headers)
                                 
                                 if response.status_code == 200:
                                     st.success("Status updated to Shipped!")
@@ -336,7 +336,7 @@ def seller_dashboard():
                     }
                     try:
                         with st.spinner("Saving bank details..."):
-                            res = requests.post("http://127.0.0.1:8000/api/seller/bank", json=payload)
+                            res = requests.post(f"{API_URL}/seller/bank", json=payload)
                             
                         if res.status_code == 200 and res.json().get("status") == "success":
                             st.success(res.json().get("message"))

@@ -88,7 +88,7 @@ CROP_IMAGES = {
 def get_marketplace_items():
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
-        response = requests.get(f"http://127.0.0.1:8000/api/market_listings", headers=headers)
+        response = requests.get(f"{API_URL}/market_listings", headers=headers)
         if response.status_code == 200:
             return response.json().get("listings", [])
         return []
@@ -98,7 +98,7 @@ def get_marketplace_items():
 def fetch_user_orders(username):
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
-        response = requests.get(f"http://127.0.0.1:8000/api/orders/{username}", headers=headers)
+        response = requests.get(f"{API_URL}/orders/{username}", headers=headers)
         if response.status_code == 200:
             return response.json().get("orders", [])
         return []
@@ -108,14 +108,14 @@ def fetch_user_orders(username):
 def fetch_recommendations(username):
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
-        response = requests.get(f"http://127.0.0.1:8000/api/recommendations/{username}", headers=headers)
+        response = requests.get(f"{API_URL}/recommendations/{username}", headers=headers)
         if response.status_code == 200:
             return response.json().get("recommendations", [])
         return []
     except:
         return []
 def fetch_notifications(role, username):
-    endpoint = f"http://127.0.0.1:8000/api/notifications/{username}?role={role}"
+    endpoint = f"{API_URL}/notifications/{username}?role={role}"
         
     headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
     try:
@@ -387,7 +387,7 @@ def consumer_checkout():
                     try:
                         with st.spinner("Processing your order & connecting to gateway..."):
                             headers = {"Authorization": f"Bearer {st.session_state.get('token', '')}"}
-                            response = requests.post("http://127.0.0.1:8000/api/checkout", json=payload, headers=headers)
+                            response = requests.post(f"{API_URL}/checkout", json=payload, headers=headers)
                             
                         if response.status_code == 200:
                             res_data = response.json()
