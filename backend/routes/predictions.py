@@ -5,8 +5,8 @@ import pickle
 from catboost import CatBoostRegressor
 import os
 import requests  #  for live API calls
-from schemas import HarvestInput
-from database import listings_collection
+from backend.schemas import HarvestInput
+from backend.database import listings_collection
 
 router = APIRouter()
 
