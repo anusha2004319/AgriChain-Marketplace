@@ -39,28 +39,49 @@ app.include_router(market_router, prefix="/api")
 app.include_router(predictions_router, prefix="/api")
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
-razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
+RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
+
+razorpay_client = None
+
+if RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET:
+    try:
+        razorpay_client = razorpay.Client(auth=(RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET))
+        print("✅ Razorpay initialized")
+    except Exception as e:
+        print("❌ Razorpay error:", e)
+else:
+    print("⚠️ Razorpay keys missing — skipping")
 def load_ml_models():
-    """Downloads models from S3 bucket on startup if not present locally"""
-    s3 = boto3.client(
-        's3',
-        aws_access_key_id=os.getenv("AWS_ACCESS_KEY"),
-        aws_secret_access_key=os.getenv("AWS_SECRET_KEY")
-    )
-    models = ['cb_price.cbm', 'cb_volume.cbm', 'prophet_model.pkl']
-    os.makedirs("models", exist_ok=True)
-    for model in models:
-        local_path = f"models/{model}"
-        if not os.path.exists(local_path):
-            logger.info(f"Downloading {model} from S3 bucket...")
-            try:
+    try:
+        aws_key = os.getenv("AWS_ACCESS_KEY")
+        aws_secret = os.getenv("AWS_SECRET_KEY")
+
+        if not aws_key or not aws_secret:
+            print("⚠️ AWS keys missing — skipping model download")
+            return
+
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=aws_key,
+            aws_secret_access_key=aws_secret
+        )
+
+        models = ['cb_price.cbm', 'cb_volume.cbm', 'prophet_model.pkl']
+        os.makedirs("models", exist_ok=True)
+
+        for model in models:
+            local_path = f"models/{model}"
+            if not os.path.exists(local_path):
+                print(f"Downloading {model}...")
                 s3.download_file('agrichain-ml-models', model, local_path)
-                logger.info(f"Successfully loaded {model}")
-            except Exception as e:
-                logger.error(f"Failed to download {model}: {e}")
+
+    except Exception as e:
+        print("❌ S3 error:", e)
 @app.on_event("startup")
 async def startup_event():
-    logger.info("AgriChain API starting...")
+    print("🚀 App starting...")
+    load_ml_models()
 @app.get("/")
 def read_root():
     return {"status": "online", "message": "AgriChain Backend is running securely!"}
