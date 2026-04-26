@@ -3,7 +3,7 @@ from pymongo import MongoClient
 
 MONGO_URL = os.getenv("MONGO_URL")
 
-print("DEBUG MONGO_URL:", MONGO_URL)  # 👈 ADD THIS
+print("DEBUG MONGO_URL:", MONGO_URL)  
 
 client = MongoClient(MONGO_URL, serverSelectionTimeoutMS=5000)
 
