@@ -1,0 +1,14 @@
+# Environments
+env/
+venv/
+backend/venv/
+frontend/venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Secrets
+.env
+backend/.env
+.streamlit

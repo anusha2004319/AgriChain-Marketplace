@@ -1,0 +1,11 @@
+streamlit
+requests
+fpdf
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+streamlit
+requests
+fpdf
+razorpay
+python-dotenv
