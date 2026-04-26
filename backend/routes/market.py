@@ -8,8 +8,8 @@ import uuid
 from dotenv import load_dotenv
 from pydantic import BaseModel
 from typing import List
-from schemas import OrderCreate, Notification, NotificationUpdate # <--- Added Notification schemas
-from database import users_collection, listings_collection, orders_collection, notifications_collection # <--- Added notifications_collection
+from backend.schemas import OrderCreate, Notification, NotificationUpdate # <--- Added Notification schemas
+from backend.database import users_collection, listings_collection, orders_collection, notifications_collection # <--- Added notifications_collection
 
 # --- SECURELY LOAD RAZORPAY KEYS ---
 load_dotenv()
