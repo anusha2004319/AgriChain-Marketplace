@@ -13,3 +13,4 @@ numpy==1.26.4
 bcrypt==3.2.2
 razorpay
 python-dotenv
+python-jose
